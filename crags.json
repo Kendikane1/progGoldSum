@@ -1,0 +1,35 @@
+{
+    "crags": [
+      {
+        "name": "Almscliff Crag",
+        "location": "North Yorkshire",
+        "distanceFromDurham": 120
+      },
+      {
+        "name": "Ilkley Crag",
+        "location": "West Yorkshire",
+        "distanceFromDurham": 128
+      },
+      {
+        "name": "Brimham Rocks",
+        "location": "North Yorkshire",
+        "distanceFromDurham": 105
+      },
+      {
+        "name": "Caley Crags",
+        "location": "West Yorkshire",
+        "distanceFromDurham": 125
+      },
+      {
+        "name": "Kyloe-In",
+        "location": "Northumberland",
+        "distanceFromDurham": 121
+      },
+      {
+        "name": "Hepburn Crag",
+        "location": "Northumberland",
+        "distanceFromDurham": 104
+      }
+    ]
+  }
+  
