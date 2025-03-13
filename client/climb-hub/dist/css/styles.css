@@ -13176,3 +13176,20 @@ section#contact form#contactForm :-ms-input-placeholder {
   font-size: 0.9rem;
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+/* added by ariz */
+.search-hover {
+  border: 1px solid #ccc;
+  outline: none;
+  background-size: 22px;
+  background-position: 13px;
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  padding: 25px;
+  transition: all 0.5s;
+}
+.search-hover:hover {
+  width: 250px;
+  padding-left: 50px;
+}

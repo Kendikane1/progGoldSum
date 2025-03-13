@@ -31,7 +31,13 @@
                         <li class="nav-item"><a class="nav-link" href="#crags">Crags</a></li>
                         <li class="nav-item"><a class="nav-link" href="#routes">Routes</a></li>
                         <li class="nav-item"><a class="nav-link" href="#community">Community</a></li>
-                        <li class="nav-item"><a class="nav-link">Search</a></li>
+                        <div id="search_form_goes_here">
+                            <form id="search_form" action="/crags/search">
+                                <input id="search_term" name="search_term" type="text" class="search-hover" placeholder="search here..." />
+                            </form>
+                  
+                            <ul id="search_results"></ul>
+                          </div>
                     </ul>
                 </div>
             </div>
