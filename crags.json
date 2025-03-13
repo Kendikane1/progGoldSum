@@ -1,5 +1,4 @@
-{
-    "crags": [
+[
       {
         "name": "Almscliff Crag",
         "location": "North Yorkshire",
@@ -31,5 +30,4 @@
         "distanceFromDurham": 104
       }
     ]
-  }
   

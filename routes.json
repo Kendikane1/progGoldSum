@@ -1,5 +1,4 @@
-{
-    "routes": [
+[
       {
         "crag": "Almscliff Crag",
         "name": "Morrell's Wall",
@@ -451,5 +450,4 @@
         "grade": "6A"
       }
     ]
-  }
   
