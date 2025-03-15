@@ -16,8 +16,8 @@ app.get('/crags/search', function (req, resp) {
     let search_term = req.query.search_term
     let search_results = []
     for (let crag of crags) {
-        if (crag.name.includes(search_term)) {
-            search_results.push(crag.name)
+        if (crag.name.toLowerCase().includes(search_term)) {
+            search_results.push(crag)
         }
     }
 
