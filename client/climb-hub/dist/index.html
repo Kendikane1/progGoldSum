@@ -32,7 +32,7 @@
                         <li class="nav-item"><a class="nav-link" href="#routes">Routes</a></li>
                         <li class="nav-item"><a class="nav-link" href="#community">Community</a></li>
                         <div id="search_form_goes_here">
-                            <form id="search_form" action="/crags/search">
+                            <form id="search_form" action="/crags/search" onkeydown="return event.key != 'Enter';">
                                 <div class="input-group rounded">
                                     <input id="search_term" name="search_term" type="text" class="form-control rounded" placeholder="Search for Crags!" aria-label="Search" aria-describedby="search-addon" />
                                   </div>
