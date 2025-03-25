@@ -12795,19 +12795,24 @@ header.masthead .masthead-heading {
   }
 }
 
-#portfolio .portfolio-item {
+/* Fix for portfolio hover overlay alignment */
+
+#portfolio .portfolio-item,
+#crags .portfolio-item {
   max-width: 26rem;
   margin-left: auto;
   margin-right: auto;
 }
 
-#portfolio .portfolio-item .portfolio-link {
+#portfolio .portfolio-item .portfolio-link,
+#crags .portfolio-item .portfolio-link {
   position: relative;
   display: block;
   margin: 0 auto;
 }
 
-#portfolio .portfolio-item .portfolio-link .portfolio-hover {
+#portfolio .portfolio-item .portfolio-link .portfolio-hover,
+#crags .portfolio-item .portfolio-link .portfolio-hover {
   display: flex;
   position: absolute;
   width: 100%;
@@ -12819,19 +12824,15 @@ header.masthead .masthead-heading {
   transition: opacity ease-in-out 0.25s;
 }
 
-#portfolio .portfolio-item .portfolio-link .portfolio-hover .portfolio-hover-content {
+#portfolio .portfolio-item .portfolio-link .portfolio-hover .portfolio-hover-content,
+#crags .portfolio-item .portfolio-link .portfolio-hover .portfolio-hover-content {
   font-size: 1.25rem;
   color: white;
 }
 
-#portfolio .portfolio-item .portfolio-link:hover .portfolio-hover {
+#portfolio .portfolio-item .portfolio-link:hover .portfolio-hover,
+#crags .portfolio-item .portfolio-link:hover .portfolio-hover {
   opacity: 1;
-}
-
-#portfolio .portfolio-item .portfolio-caption {
-  padding: 1.5rem;
-  text-align: center;
-  background-color: #fff;
 }
 
 #portfolio .portfolio-item .portfolio-caption .portfolio-caption-heading {
@@ -13201,4 +13202,10 @@ section#contact form#contactForm :-ms-input-placeholder {
 #search_results li:hover {
   background: #3498db;
   color: white;
+}
+
+/* Override uppercase text transform for search results */
+#search_results,
+#search_results li {
+  text-transform: none;
 }
