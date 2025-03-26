@@ -1,4 +1,5 @@
-// get data out this form and make fetch request to server
+
+// both get methods for crags entity
 const search_form = document.getElementById('search_form')
 search_form.addEventListener('keyup', async function (event){
     event.preventDefault() // prevents the form from being submitted
@@ -44,3 +45,28 @@ search_form.addEventListener('keyup', async function (event){
         alert(e)
     }
 })
+
+// all route links inside modals (NOT A GET METHOD)
+document.querySelectorAll('.portfolio-modal .nav-link[href^="#"]').forEach(link => {
+link.addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent default anchor behavior
+                    
+    const targetId = this.getAttribute('href');
+    const targetElement = document.querySelector(targetId);
+                    
+    // Close the modal programmatically
+    const modalElement = this.closest('.portfolio-modal');
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
+                    
+    // Wait for modal to close before scrolling
+    modalElement.addEventListener('hidden.bs.modal', function() {
+    // Scroll to the target element after modal is hidden
+    if (targetElement) {
+        setTimeout(() => {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+    }
+    }, { once: true }); // Only listen once
+});
+});
