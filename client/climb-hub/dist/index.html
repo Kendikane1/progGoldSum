@@ -188,27 +188,136 @@
         <section class="page-section bg-light" id="routes">
             <div class="container">
                 <div class="text-center">
-                    <h2 class="section-heading text-uppercase">Crag Routes</h2>
+                    <h2 class="section-heading text-uppercase" style = "padding-bottom: 65px;">Crag Routes</h2>
                 </div>
+
+                <!-- Almscliff Crag Search Section -->
                 <div class="row">
-                    <div id ="almscliffRoutes">
+                    <div id="almscliffRoutes">
                         <h3>Almscliff's Routes</h3>
                     </div>
-                    <div id ="caleyRoutes">
+                    <p>Search for specific routes in Almscliff from the search bar below or find routes by filtering a grade!</p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form id="alms_search_form" action="/routes/search" onkeydown="return event.key != 'Enter';">
+                                <div class="form-group">
+                                    <input id="alms_search_term" class="form-control" name="search_term" type="text" placeholder="Search for routes by name !">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="alms_grade_select" class="form-select">
+                                <option selected value="">Filter by Grade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="alms_search_results" style="padding-bottom: 50px;"></ul>
+                    
+                    <!-- Caley Crags Search Section -->
+                    <div id="caleyRoutes">
                         <h3>Caley's Routes</h3>
                     </div>
-                    <div id ="ilkleyRoutes">
+                    <p>Search for specific routes in Caley from the search bar below or find routes by filtering a grade!</p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form id="cal_search_form" action="/routes/search" onkeydown="return event.key != 'Enter';">
+                                <div class="form-group">
+                                    <input id="cal_search_term" class="form-control" name="search_term" type="text" placeholder="Search for routes by name !">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="cal_grade_select" class="form-select">
+                                <option selected value="">Filter by Grade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="cal_search_results" style="padding-bottom: 50px;"></ul>
+
+                    <!-- Ilkley Crag Search Section -->
+                    <div id="ilkleyRoutes">
                         <h3>Ilkley's Routes</h3>
                     </div>
-                    <div id ="brimhamRoutes">
+                    <p>Search for specific routes in Ilkley from the search bar below or find routes by filtering a grade!</p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form id="ilk_search_form" action="/routes/search" onkeydown="return event.key != 'Enter';">
+                                <div class="form-group">
+                                    <input id="ilk_search_term" class="form-control" name="search_term" type="text" placeholder="Search for routes by name !">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="ilk_grade_select" class="form-select">
+                                <option selected value="">Filter by Grade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="ilk_search_results" style="padding-bottom: 50px;"></ul>
+
+                    <!-- Brimham Rocks Search Section -->
+                    <div id="brimhamRoutes">
                         <h3>Brimham's Routes</h3>
                     </div>
-                    <div id ="kyloeRoutes">
+                    <p>Search for specific routes in Brimham from the search bar below or find routes by filtering a grade!</p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form id="brim_search_form" action="/routes/search" onkeydown="return event.key != 'Enter';">
+                                <div class="form-group">
+                                    <input id="brim_search_term" class="form-control" name="search_term" type="text" placeholder="Search for routes by name !">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="brim_grade_select" class="form-select">
+                                <option selected value="">Filter by Grade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="brim_search_results" style="padding-bottom: 50px;"></ul>
+
+                    <!-- Kyloe-In Search Section -->
+                    <div id="kyloeRoutes">
                         <h3>Kyloe-In's Routes</h3>
                     </div>
-                    <div id ="hepburnRoutes">
+                    <p>Search for specific routes in Kyloe-In from the search bar below or find routes by filtering a grade!</p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form id="ky_search_form" action="/routes/search" onkeydown="return event.key != 'Enter';">
+                                <div class="form-group">
+                                    <input id="ky_search_term" class="form-control" name="search_term" type="text" placeholder="Search for routes by name !">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="ky_grade_select" class="form-select">
+                                <option selected value="">Filter by Grade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="ky_search_results" style="padding-bottom: 50px;"></ul>
+
+                    <!-- Hepburn Crag Search Section -->
+                    <div id="hepburnRoutes">
                         <h3>Hepburn's Routes</h3>
                     </div>
+                    <p>Search for specific routes in Hepburn from the search bar below or find routes by filtering a grade!</p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <form id="hep_search_form" action="/routes/search" onkeydown="return event.key != 'Enter';">
+                                <div class="form-group">
+                                    <input id="hep_search_term" class="form-control" name="search_term" type="text" placeholder="Search for routes by name !">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="hep_grade_select" class="form-select">
+                                <option selected value="">Filter by Grade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="hep_search_results" style="padding-bottom: 50px;"></ul>
+
                 </div>
             </div>
         </section>

@@ -7,6 +7,7 @@ const ROUTES_JSON = './routes.json'
 app.use(express.static('client/climb-hub/dist'))
 app.use(express.json())
 
+
 // JSON DATA
 let crags = require(CRAGS_JSON)
 let routes = require(ROUTES_JSON)
@@ -21,7 +22,7 @@ const cragToModalMap = {
     "Hepburn Crag": "crag6"
 };
 
-// search for crags function
+// get method search for crags function
 app.get('/crags/search', function (req, resp) {
     let search_term = req.query.search_term.toLowerCase()
     let search_results = []
@@ -52,5 +53,63 @@ app.get('/crags/:name', function (req, resp) {
         resp.status(404).send({ error: "Crag not found" })
     }
 })
+
+
+// get methof routes search endpoint
+app.get('/routes/search', function (req, resp) {
+    const search_term = req.query.search_term.toLowerCase()
+    const crag_name = req.query.crag_name
+    
+    let search_results = []
+    
+    for (let route of routes) {
+        if (route.crag === crag_name && 
+            (search_term === '' || route.name.toLowerCase().includes(search_term))) {
+            search_results.push(route)
+        }
+    }
+
+    resp.send(search_results)
+})
+
+// Get all unique grades for a specific crag
+app.get('/routes/grades/:crag', function (req, resp) {
+    const cragName = req.params.crag
+    
+    // Find all routes for this crag
+    const cragRoutes = routes.filter(route => route.crag === cragName)
+    
+    // Extract unique grades
+    const uniqueGrades = [...new Set(cragRoutes.map(route => route.grade))]
+    
+    // Sort grades
+    const sortedGrades = uniqueGrades.sort((a, b) => {
+        // Extract numbers from grade for numeric sorting
+        const numA = parseFloat(a.match(/\d+\.?\d*/)?.[0] || 0)
+        const numB = parseFloat(b.match(/\d+\.?\d*/)?.[0] || 0)
+        
+        if (numA === numB) {
+            // If numbers are the same, sort alphabetically
+            return a.localeCompare(b)
+        }
+        return numA - numB
+    })
+    
+    resp.send(sortedGrades)
+})
+
+// Get routes by grade and crag
+app.get('/routes/bygrade', function (req, resp) {
+    const grade = req.query.grade
+    const cragName = req.query.crag_name
+    
+    // Find all routes matching the grade and crag
+    const matchingRoutes = routes.filter(route => 
+        route.crag === cragName && route.grade === grade
+    )
+    
+    resp.send(matchingRoutes)
+})
+
 
 module.exports = app;
