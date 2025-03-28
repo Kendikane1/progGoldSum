@@ -55,7 +55,7 @@ app.get('/crags/:name', function (req, resp) {
 })
 
 
-// get methof routes search endpoint
+// get method routes search endpoint
 app.get('/routes/search', function (req, resp) {
     const search_term = req.query.search_term.toLowerCase()
     const crag_name = req.query.crag_name
@@ -111,5 +111,22 @@ app.get('/routes/bygrade', function (req, resp) {
     resp.send(matchingRoutes)
 })
 
+
+// Get details for a specific route
+app.get('/routes/details/:crag/:routeName', function (req, resp) {
+    const cragName = decodeURIComponent(req.params.crag)
+    const routeName = decodeURIComponent(req.params.routeName)
+    
+    // Find the specific route
+    const route = routes.find(r => 
+        r.crag === cragName && r.name === routeName
+    )
+    
+    if (route) {
+        resp.send(route)
+    } else {
+        resp.status(404).send({ error: "Route not found" })
+    }
+})
 
 module.exports = app;
