@@ -57,20 +57,22 @@ The platform enables DUMC members to access information about outdoor climbing s
 ## Installation and Setup
 
 1. Clone the repo:
-git clone https://github.com/yourusername/progGoldSum.git
+```git clone https://github.com/yourusername/progGoldSum.git```
 
 2. Install the dependencies:
-cd progGoldSum
+```cd progGoldSum
 npm install
+```
 
 3. Start the server:
-npm start
+```npm start
+```
 
 4. Access the application in your browser:
 http://localhost:8090
 
 ## Project Structure
-/progGoldSum
+```/progGoldSum
 │
 ├── client/                  # Frontend files
 │   └── climb-hub/
@@ -86,6 +88,7 @@ http://localhost:8090
 ├── app.js                   # Express server and API endpoints
 ├── server.js                # Server initialization
 └── package.json             # Project dependencies
+```
 
 ## Learning Outcomes
 This project demonstrates proficiency in:
