@@ -3,6 +3,7 @@ const app = express()
 
 const CRAGS_JSON = './crags.json'
 const ROUTES_JSON = './routes.json'
+const fs = require('fs');
 
 app.use(express.static('client/climb-hub/dist'))
 app.use(express.json())
@@ -127,6 +128,56 @@ app.get('/routes/details/:crag/:routeName', function (req, resp) {
     } else {
         resp.status(404).send({ error: "Route not found" })
     }
+})
+
+
+// Update the route add endpoint with grade validation
+
+app.post("/routes/add", function(req, res){
+    console.log("received add request", req.body)
+    let route = req.body
+    
+    // List of valid crag names
+    const validCrags = [
+        "Almscliff Crag",
+        "Caley Crags",
+        "Ilkley Crag",
+        "Brimham Rocks",
+        "Kyloe-In",
+        "Hepburn Crag"
+    ];
+    
+    // Check if required fields are present
+    if (!route.crag || !route.route_name || !route.grade) {
+        res.status(400).send({ "msg": "Please fill all required fields" })
+        return
+    }
+    
+    // Ensure the crag name is valid
+    if (!validCrags.includes(route.crag)) {
+        res.status(400).send({ "msg": "Invalid crag name" })
+        return
+    }
+    
+    // Validate grade format
+    const gradePattern = /^([4-9]|[1-9][0-9])([ABC])?(\+)?$/;
+    if (!gradePattern.test(route.grade.trim())) {
+        res.status(400).send({ "msg": "Invalid grade format. Please use Fontainebleau grading format." })
+        return
+    }
+
+    // Create a properly structured route object
+    const newRoute = {
+        crag: route.crag,
+        name: route.route_name,
+        grade: route.grade.trim() // Ensure grade is trimmed for consistency
+    }
+    
+    routes.push(newRoute)
+    let data = JSON.stringify(routes, null, 2) // Pretty format JSON with 2 spaces
+    fs.writeFileSync(ROUTES_JSON, data)
+    let message = {"msg": `Successfully added ${newRoute.name} to ${newRoute.crag}`}
+    res.status(200).send(message)
 })
 
 module.exports = app;

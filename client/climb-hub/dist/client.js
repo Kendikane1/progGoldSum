@@ -1,3 +1,66 @@
+/**
+ * Shows an error modal with appropriate message based on error type
+ * @param {Error} error - The error object
+ * @param {string} context - Description of what operation was being performed
+ * @param {Function} retryCallback - Optional callback function to retry the operation
+ */
+function showErrorModal(error, context, retryCallback = null) {
+    // Get modal elements
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'))
+    const errorModalBody = document.getElementById('errorModalBody')
+    const errorModalRetry = document.getElementById('errorModalRetry')
+    const errorModalLabel = document.getElementById('errorModalLabel')
+    
+    // Default error message
+    let errorMessage = "An unexpected error occurred."
+    let errorTitle = "Error"
+    
+    // Determine error type and set appropriate message
+    if (error.message && error.message.includes('NetworkError') || 
+        error.message && error.message.includes('Failed to fetch')) {
+        errorTitle = "Connection Error"
+        errorMessage = "Unable to connect to the server. Please check your internet connection and make sure the server is running."
+    } else if (error.message && error.message.includes('404')) {
+        errorTitle = "Not Found"
+        errorMessage = "The requested resource could not be found on the server."
+    } else if (error.message && error.message.includes('401')) {
+        errorTitle = "Unauthorized"
+        errorMessage = "You are not authorized to perform this action."
+    } else if (error.message && error.message.includes('500')) {
+        errorTitle = "Server Error"
+        errorMessage = "The server encountered an error while processing your request."
+    }
+    
+    // Add context to the error message
+    if (context) {
+        errorMessage = `Error while ${context}: ${errorMessage}`
+    }
+    
+    // Add the original error message for debugging
+    errorMessage += `<div class="mt-3 small text-muted">Technical details: ${error.message || error}</div>`
+    
+    // Set modal content
+    errorModalLabel.textContent = errorTitle
+    errorModalBody.innerHTML = errorMessage
+    
+    // Handle retry button
+    if (retryCallback && typeof retryCallback === 'function') {
+        errorModalRetry.style.display = 'block'
+        errorModalRetry.onclick = () => {
+            errorModal.hide()
+            retryCallback()
+        }
+    } else {
+        errorModalRetry.style.display = 'none'
+    }
+    
+    // Show the modal
+    errorModal.show()
+    
+    // Log error to console for debugging
+    console.error(`${context} error:`, error)
+}
+
 
 // both get methods for crags entity
 const search_form = document.getElementById('search_form')
@@ -42,7 +105,10 @@ search_form.addEventListener('keyup', async function (event){
         }
     }
     catch(e){
-        alert(e)
+        showErrorModal(e, "searching for crags", () => {
+            // Retry the search
+            this.dispatchEvent(new Event('keyup'))
+        })
     }
 })
 
@@ -72,9 +138,6 @@ link.addEventListener('click', function(e) {
 });
 
 
-
-
-// Update the setupRouteSearch function to clear the details div when search is empty
 
 function setupRouteSearch(formId, inputId, resultsId, cragName) {
     const form = document.getElementById(formId)
@@ -120,7 +183,10 @@ function setupRouteSearch(formId, inputId, resultsId, cragName) {
             // Add click handlers to the links
             setupRouteDetailLinks(resultsId, cragName)
         } catch (e) {
-            alert(e)
+            showErrorModal(e, `searching for routes in ${cragName}`, () => {
+                // Retry the search
+                this.dispatchEvent(new Event('keyup'))
+            })
         }
     })
 }
@@ -165,13 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize search and grade filter functions
-    setupRouteSearch('alms_search_form', 'alms_search_term', 'alms_search_results', 'Almscliff Crag')
-    setupRouteSearch('cal_search_form', 'cal_search_term', 'cal_search_results', 'Caley Crags')
-    setupRouteSearch('ilk_search_form', 'ilk_search_term', 'ilk_search_results', 'Ilkley Crag')
-    setupRouteSearch('brim_search_form', 'brim_search_term', 'brim_search_results', 'Brimham Rocks')
-    setupRouteSearch('ky_search_form', 'ky_search_term', 'ky_search_results', 'Kyloe-In')
-    setupRouteSearch('hep_search_form', 'hep_search_term', 'hep_search_results', 'Hepburn Crag')
 
     // Populate grade dropdowns
     populateGradeDropdown('Almscliff Crag', 'alms_grade_select')
@@ -215,7 +274,10 @@ async function populateGradeDropdown(cragName, selectId) {
             select.appendChild(option)
         })
     } catch (e) {
-        console.error(`Error fetching grades for ${cragName}:`, e)
+        showErrorModal(e, `loading grades for ${cragName}`, () => {
+            // Retry loading grades
+            populateGradeDropdown(cragName, selectId)
+        })
     }
 }
 
@@ -261,7 +323,10 @@ function setupGradeFilter(selectId, resultsId, cragName) {
             setupRouteDetailLinks(resultsId, cragName)
             
         } catch (e) {
-            console.error(`Error fetching routes for ${cragName} grade ${selectedGrade}:`, e)
+            showErrorModal(e, `filtering routes by grade in ${cragName}`, () => {
+                // Retry the filter
+                this.dispatchEvent(new Event('change'))
+            })
         }
     })
 }
@@ -310,7 +375,10 @@ function setupRouteDetailLinks(resultsId, cragName) {
                 </div>
                 `
             } catch (e) {
-                console.error('Error fetching route details:', e)
+                showErrorModal(e, `loading route details for ${cragName}`, () => {
+                    // Retry loading the details
+                    this.click()
+                })
             }
         })
     })
@@ -326,5 +394,227 @@ function getDifficultyDescription(grade) {
     if (grade.includes('6') || num >= 5.5) return 'difficult'
     if (grade.includes('5') || num >= 4.5) return 'moderate'
     return 'beginner-friendly'
+
+    
 }
+
+
+// Function to find closest matching valid crag name (Diclaimer : This code was generated by AI)
+function findMatchingCrag(input) {
+    // List of valid crag names
+    const validCrags = [
+        "Almscliff Crag",
+        "Caley Crags",
+        "Ilkley Crag",
+        "Brimham Rocks",
+        "Kyloe-In",
+        "Hepburn Crag"
+    ];
+    
+    // Convert input to lowercase for case-insensitive matching
+    const inputLower = input.trim().toLowerCase();
+    
+    // Check for exact match first (case insensitive)
+    const exactMatch = validCrags.find(crag => crag.toLowerCase() === inputLower);
+    if (exactMatch) return { match: exactMatch, confidence: 1.0 };
+    
+    // Check if input is a substring of any valid crag
+    const substringMatches = validCrags.filter(crag => 
+        crag.toLowerCase().includes(inputLower) || 
+        inputLower.includes(crag.toLowerCase())
+    );
+    
+    if (substringMatches.length === 1) {
+        return { match: substringMatches[0], confidence: 0.9 };
+    }
+    
+    // Calculate similarity for each crag
+    const similarities = validCrags.map(crag => {
+        const similarity = calculateStringSimilarity(inputLower, crag.toLowerCase());
+        return { crag, similarity };
+    });
+    
+    // Sort by similarity (highest first)
+    similarities.sort((a, b) => b.similarity - a.similarity);
+    
+    // If the highest similarity is above threshold, return it
+    if (similarities[0].similarity > 0.6) {
+        return { match: similarities[0].crag, confidence: similarities[0].similarity };
+    }
+    
+    // No good match found
+    return { match: null, confidence: 0 };
+
+    // Add this validation function after the findMatchingCrag function
+
+// Validate climbing grade format (Fontainebleau system)
+function isValidGradeFormat(grade) {
+    // Grade pattern: number + optional letter (A-C) + optional plus
+    // Examples: 5, 5+, 6A, 6A+, 7B, 7B+, 8C
+    const gradePattern = /^([4-9]|[1-9][0-9])([ABC])?(\+)?$/;
+    return gradePattern.test(grade.trim());
+}
+}
+
+// Validate climbing grade format (Fontainebleau system)
+function isValidGradeFormat(grade) {
+    // Grade pattern: number + optional letter (A-C) + optional plus
+    // Examples: 5, 5+, 6A, 6A+, 7B, 7B+, 8C
+    const gradePattern = /^([4-9]|[1-9][0-9])([ABC])?(\+)?$/;
+    return gradePattern.test(grade.trim());
+}
+
+
+
+// Helper function to calculate string similarity (simplified Levenshtein-based approach)
+function calculateStringSimilarity(str1, str2) {
+    // Simple case - if one string contains the other, high similarity
+    if (str1.includes(str2)) return 0.9;
+    if (str2.includes(str1)) return 0.8;
+    
+    // Count matching characters in sequence
+    let matches = 0;
+    let maxLen = Math.max(str1.length, str2.length);
+    for (let i = 0; i < Math.min(str1.length, str2.length); i++) {
+        if (str1[i] === str2[i]) matches++;
+    }
+    
+    // Basic similarity measure
+    return matches / maxLen;
+}
+
+
+const add_form = document.getElementById('add_form')
+add_form.addEventListener('submit', async function(event){
+    event.preventDefault()
+    
+    // Get form inputs
+    const cragInput = document.getElementById('crag_name')
+    const routeNameInput = document.getElementById('route_name')
+    const gradeInput = document.getElementById('grade_input')
+    
+    // Basic form validation
+    if (!cragInput.value.trim()) {
+        alert('Please enter a crag name')
+        cragInput.focus()
+        return
+    }
+    
+    if (!routeNameInput.value.trim()) {
+        alert('Please enter a route name')
+        routeNameInput.focus()
+        return
+    }
+    
+    if (!gradeInput.value.trim()) {
+        alert('Please enter a grade')
+        gradeInput.focus()
+        return
+    }
+    
+    // Validate grade format
+    if (!isValidGradeFormat(gradeInput.value)) {
+        alert('Invalid grade format. Please use Fontainebleau grading format: number (4-9) followed by optional letter (A, B, or C) and optional plus sign. Examples: 5, 5+, 6A, 6A+, 7B, 7C+')
+        gradeInput.focus()
+        return
+    }
+    
+    // Get the closest matching crag
+    const cragMatch = findMatchingCrag(cragInput.value);
+    
+    if (!cragMatch.match) {
+        alert('Invalid crag name. Please enter one of the following:\n- Almscliff Crag\n- Caley Crags\n- Ilkley Crag\n- Brimham Rocks\n- Kyloe-In\n- Hepburn Crag')
+        cragInput.focus()
+        return
+    }
+    
+    // If we found a match but it's not exactly what the user typed
+    if (cragMatch.match.toLowerCase() !== cragInput.value.trim().toLowerCase() && cragMatch.confidence < 1.0) {
+        const useMatch = confirm(`Did you mean "${cragMatch.match}"? Click OK to use this crag name, or Cancel to edit.`);
+        if (!useMatch) {
+            cragInput.focus()
+            return
+        }
+        // Update the input field with the correct crag name
+        cragInput.value = cragMatch.match
+    }
+    
+    // Create form data with the validated crag name
+    const formData = new FormData(add_form)
+    
+    // Create form JSON with the corrected crag name
+    const formDataObj = Object.fromEntries(formData.entries())
+    formDataObj.crag = cragMatch.match // Ensure we use the properly formatted crag name
+    const formJSON = JSON.stringify(formDataObj)
+    
+
+    try {
+        const response = await fetch('/routes/add', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: formJSON
+        })
+        
+        const data = await response.json()
+        
+        if (response.ok) {
+            // Route added successfully
+            alert(data.msg)
+            
+            // Refresh the appropriate route list
+            const cragName = cragMatch.match
+            const cragPrefix = {
+                "Almscliff Crag": "alms",
+                "Caley Crags": "cal", 
+                "Ilkley Crag": "ilk",
+                "Brimham Rocks": "brim",
+                "Kyloe-In": "ky",
+                "Hepburn Crag": "hep"
+            }[cragName]
+            
+            if (cragPrefix) {
+                // Get the current dropdown element
+                const gradeSelect = document.getElementById(`${cragPrefix}_grade_select`)
+                
+                // Check if the new grade already exists in the dropdown
+                const newGrade = gradeInput.value.trim()
+                let gradeExists = false
+                
+                for (let i = 0; i < gradeSelect.options.length; i++) {
+                    if (gradeSelect.options[i].value === newGrade) {
+                        gradeExists = true
+                        break
+                    }
+                }
+                
+                // If the grade doesn't exist, refresh the dropdown
+                if (!gradeExists) {
+                    // Repopulate the dropdown (this will include the new grade)
+                    populateGradeDropdown(cragName, `${cragPrefix}_grade_select`)
+                }
+                
+                // Clear the search input and trigger a search to refresh the routes list
+                const searchInput = document.getElementById(`${cragPrefix}_search_term`)
+                if (searchInput) {
+                    searchInput.value = ''
+                    searchInput.dispatchEvent(new Event('keyup'))
+                }
+            }
+            
+            // Reset form
+            add_form.reset()
+        } else {
+            alert(data.msg || 'Error adding route')
+        }
+    } catch (e) {
+        showErrorModal(e, "adding a new route", () => {
+            // Allow the user to retry the submission
+            document.getElementById('submitButton').click()
+        })
+    }
+})
+
+
 
