@@ -13,7 +13,7 @@ app.use(express.json())
 let crags = require(CRAGS_JSON)
 let routes = require(ROUTES_JSON)
 
-// Define a mapping between crag names and their modal IDs
+// define a mapping between crag names and their modal IDs
 const cragToModalMap = {
     "Almscliff Crag": "crag1",
     "Caley Crags": "crag2",
@@ -23,7 +23,7 @@ const cragToModalMap = {
     "Hepburn Crag": "crag6"
 };
 
-// get method search for crags function
+// get method search for crags function **
 app.get('/crags/search', function (req, resp) {
     let search_term = req.query.search_term.toLowerCase()
     let search_results = []
@@ -40,7 +40,7 @@ app.get('/crags/search', function (req, resp) {
     resp.send(search_results)
 })
 
-// get specific crag details
+// get specific crag details **
 app.get('/crags/:name', function (req, resp) {
     const cragName = req.params.name
     const crag = crags.find(c => c.name === cragName)
@@ -56,7 +56,7 @@ app.get('/crags/:name', function (req, resp) {
 })
 
 
-// get method routes search endpoint
+// get method routes search endpoint **
 app.get('/routes/search', function (req, resp) {
     const search_term = req.query.search_term.toLowerCase()
     const crag_name = req.query.crag_name
@@ -73,7 +73,7 @@ app.get('/routes/search', function (req, resp) {
     resp.send(search_results)
 })
 
-// Get all unique grades for a specific crag
+// get all unique grades for a specific crag (additional filtering functionality)
 app.get('/routes/grades/:crag', function (req, resp) {
     const cragName = req.params.crag
     
@@ -99,7 +99,7 @@ app.get('/routes/grades/:crag', function (req, resp) {
     resp.send(sortedGrades)
 })
 
-// Get routes by grade and crag
+// get routes by grade and crag (part of filtering get method)
 app.get('/routes/bygrade', function (req, resp) {
     const grade = req.query.grade
     const cragName = req.query.crag_name
@@ -113,7 +113,7 @@ app.get('/routes/bygrade', function (req, resp) {
 })
 
 
-// Get details for a specific route
+// get method for details for a specific route **
 app.get('/routes/details/:crag/:routeName', function (req, resp) {
     const cragName = decodeURIComponent(req.params.crag)
     const routeName = decodeURIComponent(req.params.routeName)
@@ -131,13 +131,13 @@ app.get('/routes/details/:crag/:routeName', function (req, resp) {
 })
 
 
-// Update the route add endpoint with grade validation
+// POST method for adding a new route to route entity with validation **
 
 app.post("/routes/add", function(req, res){
     console.log("received add request", req.body)
     let route = req.body
     
-    // List of valid crag names
+    // list of valid crag names
     const validCrags = [
         "Almscliff Crag",
         "Caley Crags",
@@ -147,26 +147,26 @@ app.post("/routes/add", function(req, res){
         "Hepburn Crag"
     ];
     
-    // Check if required fields are present
+    // check if required fields are present
     if (!route.crag || !route.route_name || !route.grade) {
         res.status(400).send({ "msg": "Please fill all required fields" })
         return
     }
     
-    // Ensure the crag name is valid
+    // ensure the crag name is valid
     if (!validCrags.includes(route.crag)) {
         res.status(400).send({ "msg": "Invalid crag name" })
         return
     }
     
-    // Validate grade format
+    // validate grade format by implementing regex 
     const gradePattern = /^([4-9]|[1-9][0-9])([ABC])?(\+)?$/;
     if (!gradePattern.test(route.grade.trim())) {
         res.status(400).send({ "msg": "Invalid grade format. Please use Fontainebleau grading format." })
         return
     }
 
-    // Create a properly structured route object
+    // create a properly structured route object to push as a json object
     const newRoute = {
         crag: route.crag,
         name: route.route_name,
@@ -174,7 +174,7 @@ app.post("/routes/add", function(req, res){
     }
     
     routes.push(newRoute)
-    let data = JSON.stringify(routes, null, 2) // Pretty format JSON with 2 spaces
+    let data = JSON.stringify(routes, null, 2) // pretty format JSON with 2 spaces
     fs.writeFileSync(ROUTES_JSON, data)
     let message = {"msg": `Successfully added ${newRoute.name} to ${newRoute.crag}`}
     res.status(200).send(message)
